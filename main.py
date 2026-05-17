@@ -1,3 +1,4 @@
+import cv2
 import os
 import json
 from dotenv import load_dotenv
@@ -40,9 +41,48 @@ client = OpenAI(
 
 
 def extract_text_from_image(image_path):
-    image = Image.open(image_path)
-    text = pytesseract.image_to_string(image)
-    return text
+    image = cv2.imread(image_path)
+
+    if image is None:
+        raise FileNotFoundError(f"Image not found: {image_path}")
+
+    # OCR pass 1: original image
+    original_text = pytesseract.image_to_string(Image.open(image_path))
+
+    # OCR pass 2: enhanced image
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    scale_percent = 200
+    width = int(gray.shape[1] * scale_percent / 100)
+    height = int(gray.shape[0] * scale_percent / 100)
+    resized = cv2.resize(gray, (width, height), interpolation=cv2.INTER_CUBIC)
+
+    denoised = cv2.fastNlMeansDenoising(resized, None, 30, 7, 21)
+    enhanced = cv2.equalizeHist(denoised)
+
+    threshold = cv2.adaptiveThreshold(
+        enhanced,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        31,
+        11
+    )
+
+    cv2.imwrite("outputs/enhanced_ocr_image.png", threshold)
+
+    custom_config = r"--oem 3 --psm 6"
+    enhanced_text = pytesseract.image_to_string(threshold, config=custom_config)
+
+    combined_text = f"""
+OCR PASS 1 - ORIGINAL IMAGE:
+{original_text}
+
+OCR PASS 2 - ENHANCED IMAGE:
+{enhanced_text}
+"""
+
+    return combined_text
 
 
 def extract_structured_data(raw_text):
