@@ -1,0 +1,35 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables / API keys
+.env
+
+# VS Code settings
+.vscode/
+
+# OCR temporary files
+temp/
+logs/
+Support_info.venv
+
+# AI outputs
+output_excel/
+output_json/
+output_images/
+
+# Large raw images
+Images/
+
+# Windows system files
+Thumbs.db
+Desktop.ini
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Misc
+*.log
