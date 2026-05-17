@@ -3,3 +3,4 @@ pillow
 openpyxl
 python-dotenv
 openai
+opencv-python
