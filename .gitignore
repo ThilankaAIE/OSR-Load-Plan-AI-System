@@ -15,14 +15,18 @@ __pycache__/
 temp/
 logs/
 Support_info.venv
-phase1-1/
 
-# AI outputs
+# Temporary development files
+phase1-1.py
+
+# Generated outputs
+outputs/
 output_excel/
 output_json/
 output_images/
 
-# Large raw images
+# Raw input images
+input_images/
 Images/
 
 # Windows system files
@@ -32,5 +36,5 @@ Desktop.ini
 # Jupyter
 .ipynb_checkpoints/
 
-# Misc
+# Misc logs
 *.log
